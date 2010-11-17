@@ -1,0 +1,983 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename qda.info
+@settitle QDA user manual
+@setchapternewpage off
+@paragraphindent asis
+@c %**end of header
+@set UPDATED 05/02/2001
+@set VERSION 1.1
+
+
+@macro QDA
+QDA
+@end macro
+ 
+@macro NUDIST
+@sc{NUD.IST}
+@end macro
+
+@ifinfo
+
+This file documents version @value{VERSION} of the @QDA qualitative data
+analysis package for GNU Emacs.
+
+Last updated @value{UPDATED}.
+
+Copyright 1999 Jim Ottaway
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries a copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+sections entitled ``Copying'' and ``GNU General Public License'' are
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation
+approved by the Free Software Foundation.
+@end ifinfo
+
+@c  This title page illustrates only one of the
+@c  two methods of forming a title page.
+
+@titlepage
+@title QDA
+@subtitle a qualitative data analysis package for GNU Emacs
+@subtitle user manual
+@subtitle Version @value{VERSION}
+@author Jim Ottaway
+@c  The following two commands
+@c  start the copyright page.
+@page
+@vskip 0pt plus 1filll
+
+Copyright 1999 Jim Ottaway
+
+Last update @value{UPDATED}.
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries a copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+sections entitled ``Copying'' and ``GNU General Public License'' are
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation
+approved by the Free Software Foundation.
+@end titlepage
+
+@node Top, Introduction, (dir), (dir)
+
+@contents
+@ifinfo
+
+This document describes version @value{VERSION} of the @QDA qualitative
+data analysis package for GNU Emacs.  It was last updated
+@value{UPDATED}.
+
+@end ifinfo
+
+@menu
+* Introduction::                
+* User level commands::         
+* Creating loading and saving projects::  
+* Extending QDA::               
+* Tutorials::                   
+* Setting up QDA::              
+* History::                     
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Introduction
+
+* General Overview::            
+* Basic concepts::              
+
+Basic concepts
+
+* Text unit::                   
+* Document::                    
+* Indexing::                    
+* Tree::                        
+* Memos::                       
+* Project::                     
+
+User level commands
+
+* Viewing the tree::            
+* Tree building::               
+* Updatable nodes::             
+* Editing memos::               
+* Indexing commands::           
+* Set operations::              
+* Miscellaneous things::        
+
+Viewing the tree
+
+* Viewing tree basics::         
+* Getting info on a node::      
+
+Miscellaneous things
+
+* Base Data::                   
+* Building a tree using Emacs Lisp::  
+
+Creating, loading and saving projects
+
+* Creating a project::          
+* Loading a project::           
+* Saving the project::          
+* Documents::                   
+
+Documents
+
+* Introducing documents::       
+* Removing documents::          
+
+Tutorials
+
+* Building a tree::             
+* Doing things with documents::  
+
+@end detailmenu
+@end menu
+
+@node Introduction, User level commands, Top, Top
+@chapter Introduction
+
+@menu
+* General Overview::            
+* Basic concepts::              
+@end menu
+
+@node General Overview, Basic concepts, Introduction, Introduction
+@section General Overview
+
+@QDA{} is a program that helps you analyze your qualitative data.  If you
+are familiar with @NUDIST{}, you will recognize some similarities with
+@QDA{}.  Where @QDA{} differs from @NUDIST{} is in its extensibility.  
+
+The basic principle behind @QDA{} is similar to the index of a book.  If,
+for example, you have a whole lot of interviews you can gather together
+all sections of the interviews where the informants are talking about
+the same subject.  You can apply many different index entries to the
+same section of the text.  This makes analysis of the data much easier
+than if you had to scan through all the transcripts each time you were
+looking for a particular topic.
+
+If this were all that @QDA{} did, it would be a useful flexible database,
+but @QDA{} also enables @emph{analysis} of the data.  This is achieved
+by two things: building of conceptual structures, and the memo facility.
+
+@QDA{} allows you to organize the indexing of data hierarchically in a
+tree structure.@footnote{While this manual pretends for the most part
+that @QDA{} uses a tree structure for organizing the data, it is
+possible to develop new structures @xref{Extending QDA}.}  Thus, it is
+possible to break down large categories into smaller ones.  A simple
+example: I am studying the National Lottery.  I index all places where
+people talk about winning on the Lottery, and I want to see how talk
+about winning small amounts differs from winning large amounts.  Using
+@QDA{} I can create sub-categories under `winning the Lottery':
+`winning small amounts', and `winning the jackpot'.  This sort of
+classification is simple, but I can make it as complex as I need.  For
+example, I may come to realise that I need to look at `winning' more
+generally still (not just in relation to the jackpot), and to compare
+the idea of winning with something else---with the idea of
+@emph{earning} money, for example.  I could take this further.  I
+might wonder whether men think about winning differently from women,
+and this is easily done using the set searching functions.
+
+The ease with which you can play around with the data, testing ideas,
+hunches and hypotheses, is the main advantage of qualitative data
+analysis.  In the example given above, which is actually part of the
+research I am doing right now, I had an idea one day that I should look
+at how people talk in a general way about big things and small things,
+and to look at this in relation to various activities---gambling, risk,
+voting, charitable giving, and so on.  This actually turns out to be a
+very interesting line of exploration, but I probably wouldn't have
+followed it up if I was not using @QDA{} which makes it easy to do so.
+
+The other aspect of analysis and theory-building in @QDA{} is the memo
+facility. Memos are research note that researchers write to themselves
+discussing and developing their emerging understanding of the data.
+These memos can be attached to nodes in the indexing system, typically
+to discuss the significance of a particular category, or to documents,
+typically to draw attention to something in the text.
+
+If you do not have @QDA{} installed on your system, I suggest you look
+at @ref{Setting up QDA} first. 
+
+There are some small tutorials to get you going on various aspects of
+@QDA{} @xref{Tutorials}.
+
+@node  Basic concepts,  , General Overview, Introduction
+@section Basic concepts
+
+This section details the basic concepts that @QDA{} works with from the
+smallest unit, the text unit, to the largest, the project.
+
+@menu
+* Text unit::                   
+* Document::                    
+* Indexing::                    
+* Tree::                        
+* Memos::                       
+* Project::                     
+@end menu
+
+@node Text unit, Document, Basic concepts, Basic concepts
+@subsection Text unit
+
+The text unit is the basic unit of analysis.  It is an area of text
+within a document that is treated as an indivisible unit for the
+purposes of indexing.  Text units are delimited by
+@code{qda-text-unit-delimiter}, a regular expression that defines what
+separates a text unit from the preceding and succeeding ones.  By
+default, the delimiter is a blank line.  This means that the individual
+`chunks' of text are separated by an empty line:
+
+@example
+Well of course I'd, you know, like to win       @r{| text unit 1}
+the jackpot in some sense.  But I know          @r{| text unit 1}
+that...that there would be problems with        @r{| text unit 1}
+this also.  You wouldn't be able to carry       @r{| text unit 1}
+on living the way you do now, there would       @r{| text unit 1}
+be so much changing all at the same time.       @r{| text unit 1}
+                                                @r{| delimiter}
+What kinds of things?                           @r{| text unit 2}
+Well your friends for one thing.  How           @r{| text unit 2}
+would you be able to keep your old              @r{| text unit 2}
+friends.  I don't mean your...your best         @r{| text unit 2}
+friends.  They would probably be easier         @r{| text unit 2}
+to...keep.  No, your, you know, everyday        @r{| text unit 2}
+friends.  It would be very hard to keep         @r{| text unit 2}
+them if they knew that you...that you had       @r{| text unit 2}
+won millions.                                   @r{| text unit 2}
+@end example
+
+Breaking up chunks of text in this way is usually fine, but for some
+kinds of research making the sentence the unit might be necessary.  To
+do this, you could change @code{qda-text-unit-delimiter} to
+@samp{"\\."}.@footnote{Be careful if you do this: you won't be able to
+use periods for anything else.  If a period was the delimiter in the
+example, all the ellipses would delimit empty text units.}
+
+@node Document, Indexing, Text unit, Basic concepts
+@subsection Document
+
+A document is a text file that has been introduced to the
+project. @xref{Documents} On introduction, the file is given a name by
+which it is used in the project, and the position of all text-units in
+the file is recorded in the document database.
+
+@node Indexing, Tree, Document, Basic concepts
+@subsection Indexing
+
+Indexing is a list of text units selected from documents in the project,
+and is the basic object that the @QDA{} program manipulates.  Indexing
+gathers together text units that have some common quality from all files
+in the project.  In a project about gambling, for example, you might
+collect together text units that refer to playing the lottery, or to
+poker, or whatever.  Indexing is manipulated through high level
+commands, @dots{see}
+@c add xref
+
+@node Tree, Memos, Indexing, Basic concepts
+@subsection Tree
+
+The tree is the structure for organizing categories.@footnote{See
+@ref{Extending QDA} for details of how to add new data structures.}
+It is a hierarchical structure of nodes each of which has exactly one
+parent and any number of children.  Each node of the tree has a
+descriptive name and may hold indexing.  Trees may also have a longer
+description and a memo.  Text unit indexing is attached to the nodes
+of the tree.
+@c add xref
+
+There is a special node called @dfn{root} which is the ancestor of all
+nodes.  You don't actually do anything to root, it is just there to hold
+all the other nodes together.  In the example below, root is depicted as
+@samp{()}.
+
+Nodes have a numerical address: a list of numbers that describes a
+``path'' from root to the node. It's similar to directions someone might
+give you. For example, an address of @code{(2 1 2)} means ``start at
+root, take the second node, then the first node, then the second node''.
+
+Here is an example of a tree as displayed by @code{qda-view-tree} which
+should make this clearer:
+
+@example
+@group
+ ()
+ |-- (1) luck*
+ |-- (2) risk
+ |   |-- (1) personal*
+ |   |   |-- (1) physical*
+ |   |   `-- (2) other                @r{node (2 1 2), name ``other''}
+ |   `-- (2) business
+ |-- (3) addiction
+ |   |-- (1) personality*
+ |   |-- (2) sometimes*
+ |   |-- (3) compulsion to repeat*
+ |   `-- (4) -aholic*
+ `-- (4) fate*
+@end group
+@end example
+
+This is only a small example of a tree, in practice there would be many
+more nodes at deeper levels.  The tree display shows which nodes have
+indexing with @samp{*} characters after the node name. Note that a node
+does not @emph{have} to have any indexing.  The subtree of a node
+usually reflects some finer-grained articulation of the parent concept,
+thus, @samp{personality} (the idea of an addictive personality) is a
+sub-category of the (very) general category of @samp{addiction}, and will
+probably be further refined during analysis.  In practice indexing tends
+to gather at the leaf nodes as the categories become more refined.
+Notice also that the children of a node need not be mutually exclusive
+categories; it is up to you how you organise the nodes and how you see
+the relationship between them.
+
+@QDA{} provides a set of commands for easily manipulating the tree, such
+as adding, deleting, moving copying nodes. The command
+@kbd{M-x qda-view-tree} shows the tree and makes it easy for you to do
+such things (and many more).  This encourages you to experiment with
+different configurations of nodes in the tree and hence of the concepts
+that are the building blocks of emerging theory.
+@c add xref
+The indexing attached to a node is just as easy to inspect and update by
+adding and deleting indexing.
+@c add xref
+There is also a range of set operations available that you can use to
+explore the indexing at nodes.
+@c add xref
+
+@node Memos, Project, Tree, Basic concepts
+@subsection Memos
+
+Memos are the main tool for developing theory.  They are notes to
+yourself and anyone else involved in the analysis containing ideas about
+whatever object they are attached to.  Currently, memos can be attached
+to nodes in the tree, text units indexed to a node, and documents.  They
+can, in principle, be attached to any object, you just have to define a
+new memo type @xref{Extending QDA}.
+@c add xref
+@c add references to Glaser and Strauss and Miles and Huberman.
+
+@node Project,  , Memos, Basic concepts
+@subsection Project
+
+A project is a collection of documents, data structures such as trees,
+and memos.  It is organised around the topic of the research; my main
+project is called @samp{lottery}; it collects transcripts of interviews,
+observation notes, texts from other sources and my research journal,
+which is a sort of log of ideas (I introduce this in sections, otherwise
+it would keep changing).  A project has its own  directory in which the
+databases are stored.
+@c add xref
+
+@node  User level commands, Creating loading and saving projects, Introduction, Top
+@chapter User level commands
+
+@menu
+* Viewing the tree::            
+* Tree building::               
+* Updatable nodes::             
+* Editing memos::               
+* Indexing commands::           
+* Set operations::              
+* Miscellaneous things::        
+@end menu
+
+@node  Viewing the tree, Tree building, User level commands, User level commands
+@comment  node-name,  next,  previous,  up
+@section Viewing the tree
+
+@menu
+* Viewing tree basics::         
+* Getting info on a node::      
+@end menu
+
+@node  Viewing tree basics, Getting info on a node, Viewing the tree, Viewing the tree
+@comment  node-name,  next,  previous,  up
+@subsection Basics
+
+The command @kbd{M-x qda-view-tree} shows you the current state of the
+tree.  When you have finished looking at the tree, you may press
+@key{q} to bury the buffer.
+
+The tree is the main point of @QDA{}, and you will spend most of your
+time manipulating the tree, adding indexing, and jumping back and
+forth from the tree to indexing views.  I have, therefore, tried to
+make the tree display as easy to use as possible.@footnote{Any
+suggestions for improving the ease of use are greatly appreciated!} 
+
+A typical tree is rather long, but here is a truncated example:
+
+@example
+()
+ |-(1) base-data...
+ |-(2) persons %...
+ |-(3) feelings %...
+ |-(4) time...
+ |  |-(1) periods %
+ |  |  |-(1) week * &
+ |  |  |-(2) day
+ |  |  |  |-(1) sunday * &
+ |  |  |  |-(2) monday * &
+ |  |  |  |-(3) tuesday * &
+ |  |  |  |-(4) wednesday * &
+ |  |  |  |-(5) thursday * &
+ |  |  |  |-(6) friday * &
+ |  |  |  `-(7) saturday * &
+ |  |  |-(3) weekend * &
+ |  |  |-(7) month * &
+ |  |  |-(8) year
+ |  |  |-(9) lifetime
+ |  |  |-(10) historical
+ |  |  |-(11) holiday * &
+ |  |  `-(12) instant
+ |  |-(2) practices
+ |  |  |-(1) lottery
+ |  |  |  |-(1) buying
+ |  |  |  `-(2) checking * % &
+ |  |  |     `-(1) by day
+ |  |  |        |-(1) checking:sunday
+ |  |  |        |-(2) checking:monday
+ |  |  |        |-(3) checking:tuesday
+ |  |  |        |-(4) checking:wednesday
+ |  |  |        |-(5) checking:thursday
+ |  |  |        |-(6) checking:friday
+ |  |  |        `-(7) checking:saturday
+ |  |  |-(2) work
+ |  |  `-(3) leisure %
+ |  `-(3) delays...
+          .
+          .
+          .
+@end example
+
+Because the tree gets difficult to read when it grows, you can toggle
+the visibility of the children of the branch at point by pressing
+@key{RET}.  The key @key{H} hides all children of all branches,
+making the tree view as compact as possible, and the key @key{A} opens
+up all the branches. If a node has hidden children, this is indicated
+with an ellipsis (@samp{...}); this can be seen in the example.
+
+You will notice from the example that some nodes have characters
+after the name.  These give status information about the node:
+
+@table @samp
+@item *
+The node has indexing. @xref{Indexing commands}
+@item %
+The node has a memo.  @xref{Editing memos}
+@item &
+The node has an update function.  @xref{Updatable nodes}
+@end table
+
+When you make changes to the tree (@pxref{Tree building}), the tree is
+not automatically updated.  To see the current tree, you give the
+command @kbd{M-x qda-view-tree} again, or if you are in a @QDA{} buffer,
+you can simply press @key{t}.@footnote{It would be possible to make the
+tree update automatically, but this slows down viewing the tree, and I
+wanted to make this as fast as possible.}
+
+@node  Getting info on a node,  , Viewing tree basics, Viewing the tree
+@comment  node-name,  next,  previous,  up
+@subsection Getting info on a node
+
+The command @kbd{M-x qda-view-node-info} pops up a small window with
+information on a node.  You are prompted for a node unless you are
+viewing the tree, when info for the node at point is given.  If you
+are in the tree viewing buffer, the key @key{I} toggles viewing of
+node info, and when it is on the node info window is updated as you
+move around the tree.
+
+A typical node info window looks like this (minus annotations):
+
+@example
+node: (4 2 1 2) Memo Update                     @r{| node address and status}
+name: /time/practices/lottery/checking          @r{| path name}
+description: When people check their tickets    @r{| long description}
+indexing: 20 text units in 5 docs               @r{| indexing status}
+@end example
+
+Essentially, the information given is a more verbose form of the
+information given in the tree diagram.
+
+@node  Tree building, Updatable nodes, Viewing the tree, User level commands
+@comment  node-name,  next,  previous,  up
+@section Tree building
+
+This section details building your tree: adding nodes, deleting,
+moving, etc.  If you are in a @QDA buffer, you can also access these
+commands through the mode-specific key-bindings, and through the
+@QDA{} menu.  You know you are in such a buffer if the words
+@samp{QDA-view} are in the modeline.  This is a good idea when you are
+beginning, since you can access the menus from there to see all the
+available commands.  I further recommend working on your tree from the
+tree buffer (@samp{*QDA-tree*}), it means you can see what you
+have done. 
+@c add xref to viewing the tree
+
+All commands operating on nodes use completion in the minibuffer in the
+usual Emacs way.  You may also select nodes for the operation from the
+tree display.  To do this, type @kbd{C-xt} when you are prompted for a
+node.
+
+The following tree building commands are available:
+ 
+@itemize @bullet
+@item 
+@code{qda-add-node}
+@item
+@code{qda-delete-node}
+@item
+@code{qda-move-node}
+@item
+@code{qda-copy-node}
+@item
+@code{qda-rename-node}
+@item
+@code{qda-renumber-node}
+@item
+@code{qda-redescribe-node} (change the node description)
+@end itemize
+
+They should be self-explanatory.  Try them!
+
+@node  Updatable nodes, Editing memos, Tree building, User level commands
+@comment  node-name,  next,  previous,  up
+@section Updatable nodes
+
+A node may have some lisp code attached to it which may be evaluated on
+demand.  The main use for this is to allow nodes to automatically index
+data to them.  For example, if you have a base data node, you might want
+to automatically all women to @samp{base data/gender/women} and all men
+to @samp{base data/gender/men}.
+
+@example
+()
+ |-(1) base-data
+ |  |-(1) gender
+ |  |  |-(1) female &
+ |  |  `-(2) male * &
+ |  |-(2) class
+ |  |  |-(1) social
+ |  |  `-(2) emic
+ |  |     |-(1) working
+ |  |     `-(2) middle
+@end example
+
+Thus, the node @samp{(1 1 1)} would have an updatable slot something
+like this:
+
+@example
+(lambda (n)
+   (setf (qda-node-indexing n)
+         (qda-search-finds
+            (qda-search
+               '("gender:.*f" :regexp :whole-doc)))))
+@end example
+
+Usually, an updatable slot will be a lambda expression, where the
+argument @samp{N} refers to the node itself.  So, in the above example,
+the indexing for the node is set to the search finds, which find the
+gender field in the document (it is helpful to include a simple database
+in all documents that records useful data such as gender in such a way
+that it is easy to search for).
+
+This is very useful for sorting out all the independent variables in
+your project (age, class, income, gender, etc.).  But there are other
+uses for the updatable slot.
+
+For example, I am interested in the relationship between attitudes to
+luck and risk, I have nodes where I collect text units on both of these,
+and I can automatically find the intersection of the two (where there is
+data on both luck and risk):
+
+@example
+(lambda
+  (n)
+  (qda-node-intersection
+   '(8 2)
+   '(7 1)
+   n))
+@end example
+
+The next example is more complicated.  As well as updating the node's
+search, we do a crosstabulation of the node and indexing for days of the
+week (we are interested in when people check their lottery tickets).
+Because @code{qda-node-vector} adds a subtree to the node, we want to
+delete any old results first, otherwise we would end up with repeated
+subtrees, and the earlier ones would contain out of date indexing.
+
+@example
+(lambda
+  (n)
+  (setf
+   (qda-node-indexing n)
+   (qda-search-finds
+    (qda-search
+     '("check"))))
+  (qda-comment do the node-vector deleting any old vector nodes)
+  (let
+      ((by-day-node
+	(qda-find-node-by-kid-name n "by day")))
+    (when by-day-node
+      (qda-delete-node by-day-node t))
+    (qda-node-vector n
+		     '(4 1 2))))
+@end example
+
+The expression @code{(qda-comment do the node-vector deleting any old
+vector nodes)} is a way of commenting the code: ordinary comments
+disappear when the code is read.
+
+@node  Editing memos, Indexing commands, Updatable nodes, User level commands
+@comment  node-name,  next,  previous,  up
+@section Editing memos
+
+@node  Indexing commands, Set operations, Editing memos, User level commands
+@comment  node-name,  next,  previous,  up
+@section Indexing commands
+
+@node  Set operations, Miscellaneous things, Indexing commands, User level commands
+@comment  node-name,  next,  previous,  up
+@section Set operations
+
+@node  Miscellaneous things,  , Set operations, User level commands
+@comment  node-name,  next,  previous,  up
+@section Miscellaneous things
+
+@menu
+* Base Data::                   
+* Building a tree using Emacs Lisp::  
+@end menu
+
+@node  Base Data, Building a tree using Emacs Lisp, Miscellaneous things, Miscellaneous things
+@comment  node-name,  next,  previous,  up
+@subsection Base Data
+It is
+useful to have places where characteristics such as gender, age and
+class are recorded (independent variables).  If you set up nodes for
+gender, for example, you can index all text units in all documents with
+female informants to a `female' node, and all males to a `male' node:
+
+@example
+()
+ `-(1) Base Data 
+    `-(1) gender
+       |-(1) female
+       `-(2) male
+@end example
+
+This allows you to explore differences between male and female data
+using the set exploration commands. @xref{Set operations}
+
+          
+@node  Building a tree using Emacs Lisp,  , Base Data, Miscellaneous things
+@comment  node-name,  next,  previous,  up
+@subsection Building a tree using Emacs Lisp
+
+Usually when you are building a tree you will do it interactively.
+There are ocassions when you might want to create a whole subtree all in
+one go.  The `Base Data' subtree is a good example of this. @xref{Base
+Data}
+
+You can use the function @code{qda-build-tree} as a more convenient (and
+re-usable) way of constructing a whole base data tree:
+
+@example
+(qda-build-tree
+ '(("Base Data"
+    (("gender"
+      ("male" "female")))))
+ '())
+      
+        
+@end example
+
+
+
+
+
+@node Creating loading and saving projects, Extending QDA, User level commands, Top
+@chapter Creating, loading and saving projects
+
+In this chapter, I assume that you have  @QDA{} set up and
+loaded. @xref{Setting up QDA}  There can only be one project at any
+time, so if you create or load another project when there is already one
+loaded, you will be asked if you want to save the current one first.
+
+@menu
+* Creating a project::          
+* Loading a project::           
+* Saving the project::          
+* Documents::                   
+@end menu
+
+@node Creating a project, Loading a project, Creating loading and saving projects, Creating loading and saving projects
+@section Creating a project
+
+To create a new project, run the command @kbd{M-x qda-create-project}.
+You will be asked for a name for the project.  This name must be unique;
+if there is another project of the same name in
+@code{qda-project-directory} an error will be signalled, and you will
+have to try again with a new name.  When the project has been created,
+you can get going introducing documents, building a tree, and whatever
+else takes your fancy.
+
+@node Loading a project, Saving the project, Creating a project, Creating loading and saving projects
+@section Loading a project
+
+To load a project, run the command @kbd{M-x qda-load-project}.  You will
+be asked for a name and if the project exists it will be loaded.  You
+will then be given a display of the current state of the tree.
+
+@node  Saving the project, Documents, Loading a project, Creating loading and saving projects
+@section Saving the project
+
+To save the project, just run the command @kbd{M-x qda-save-project}.
+If you are in a @QDA{} viewing buffer, you can also use the key @key{S}.
+You know you are in such a buffer if the words @samp{QDA-view} are in
+the modeline.
+
+@node  Documents,  , Saving the project, Creating loading and saving projects
+@section Documents
+
+Every document has a unique name within the project.  You can call them
+whatever you like, just as long as each one has a different name.  The
+idea behind giving documents a name is to save you the bother of typing
+a long file name when you want to refer to a document.  The document
+name hides the details of where a file is in the filesystem behind a
+simple name.
+
+@emph{Please note} It is important that the file attached to a document
+is not changed after it has been introduced to a project.  If it
+changes, all the positions of text units will be wrong.
+@c  @footnote{Actually, you can make small changes to text units as
+@c  long as you don't change the number or the order of text units in a
+@c  document.  This is a useful feature if you want to correct minor
+@c  typos, or if you want to change all the names in the document (for
+@c  anonymity) after you have introduced it.} 
+I recom@-mend making files that have been introduced read-only by
+whatever means your operating system offers (for my Linux system, it is
+@samp{chmod -w @var{file}}).
+
+
+It is possible to have a file represented more than once in the
+project.  If you have a joint interview with three people, say, you
+may want to introduce it three times, using different document names
+of course.
+
+@menu
+* Introducing documents::       
+* Removing documents::          
+@end menu
+
+@node Introducing documents, Removing documents, Documents, Documents
+@subsection Introducing documents
+
+Introducing a document means adding it to the project document database,
+making it available for indexing.  To add a document, run the command
+@kbd{M-x qda-introduce-doc}.  You will be asked for a file and a name
+for the document.  If the name is already in use you will have to try
+again with another name.
+
+@node Removing documents,  , Introducing documents, Documents
+@subsection Removing documents
+
+@node  Extending QDA, Tutorials, Creating loading and saving projects, Top
+@chapter Extending QDA
+
+Put stuff here about how to add a new project object and a new memo
+object.
+
+@node  Tutorials, Setting up QDA, Extending QDA, Top
+@comment  node-name,  next,  previous,  up
+@chapter Tutorials
+
+@menu
+* Building a tree::             
+* Doing things with documents::  
+@end menu
+
+@node  Building a tree, Doing things with documents, Tutorials, Tutorials
+@comment  node-name,  next,  previous,  up
+@section Building a tree
+
+In this tutorial we will create a project and build a small tree.
+
+First, type @kbd{M-x qda-create-project}.  You will be asked for a
+name for the project, call it something like ``my-project''.
+
+Now type @kbd{M-x qda-view-tree}.  You will find yourself in a window
+with just the characters @samp{()} in it.  This is the root node.  
+
+Now add some nodes.  To do this, type @key{a}.  You will be asked for
+the parent of the node, and offered whatever node point is currently
+on as the default---if you have not moved point this will be root.
+
+Let's imagine we are doing analysis of fast food.  We would probably
+want to classify these according to types, so add a node called
+``types''.  When you are asked for a description, call it something
+like ``kinds of fast food''.  
+
+Type @key{t} to update the tree, and it will now look like this:
+
+@example
+()
+ `-(1) types
+@end example
+
+Now move the cursor down to the node types.  The current node is
+highlight if you have colour on your version of Emacs.  
+
+Let's add some types of fast food.  Using @samp{(1)} as the parent,
+add nodes for burgers, pizza, fish and chips, sandwiches.  Remember to
+press @key{t} to update the tree.
+
+The tree now looks like this:
+
+@example
+()
+ `-(1) types
+    |-(1) burgers
+    |-(2) pizza
+    |-(3) fish and chips
+    `-(4) sandwiches
+@end example
+
+We want to add some kinds of pizza as sub-categories.  The node
+address for pizza is @samp{(1 2)}---the second entry under
+`types'---so we want to give @samp{(1 2)} as the parent (an easy way
+of doing this is to move the cursor to the line with `pizza' on it).
+
+Add nodes under pizza for margherita, vegetarian, fiorentino, quattro
+stagioni. 
+
+
+@node  Doing things with documents,  , Building a tree, Tutorials
+@comment  node-name,  next,  previous,  up
+@section  Documents: introducing, indexing searching
+
+@node Setting up QDA, History, Tutorials, Top
+@chapter Setting up QDA
+
+You need to do two things to set up @QDA{}: install the lisp files and set
+up a directory for your @QDA{} projects.  The lisp files should be placed
+somewhere in @code{load-path}.  On my system, I made a directory
+@file{~/elisp/qda} which I place on the load path in my @file{.emacs}
+file:
+
+@lisp
+(setq load-path (append load-path
+                   (list (expand-file-name "~/elisp/qda"))))
+@end lisp
+
+@noindent
+The program runs much faster if you byte-compile the files, so I
+recommend you do this. I also added a line in @file{.emacs} to autoload
+@QDA{} so I can start up a project with the command
+@code{qda-load-project}:
+
+@lisp
+(autoload 'qda-load-project "qda" "Load or create a qda project" t)
+@end lisp
+
+@noindent
+Next you need to make a directory for @QDA{} projects, I use @file{~/qda/}
+which is the default.  If you choose something different, you'll need to
+change @code{qda-project-directory}.  It's easiest to do this in your
+@file{.emacs} file:
+
+@lisp
+(defvar qda-project-directory "~/my-qda-directory"
+  "The name of the base directory where all qda projects are kept.")
+@end lisp
+
+@noindent
+With these things done, you should be able to get going with your @QDA{}
+projects.
+
+
+@node History,  , Setting up QDA, Top
+@chapter Historyp
+
+I started writing @QDA{} when I was a sociology undergraduate using
+@NUDIST{} to analyse newspaper reports on political scandals (there were
+lots of these at the time).  I liked it very much, but I could see some
+improvements that could have been made if only I had access to the
+source code, or there were some built in extensibility.  I had also been
+looking at Atlas/ti and liked its conceptual network model and imagined
+a qualitative data analysis program that managed to combine the two.  I
+wrote and rewrote a basic version of the program several times using
+different programming languages, but never managed to finish anything
+but a toy version that would be useless in practice.  For a while I
+forgot all about it, working instead on small software tools to help out
+in using @NUDIST{} (and doing some sociology as well).  It was only when I
+started using GNU Emacs that I began to think of writing the thing
+again.  GNU Emacs is the ideal environment for developing a qualitative
+data analysis program: because it works with text it has built in
+facilities for many of the features necessary for such a program, it is
+itself extensible, and has many useful libraries that sit well with the
+program.
+
+I based the initial version (this one) closely on the @NUDIST{} program.
+Its central organizing principle is a tree with indexing attached to
+nodes of the tree.  I have tried to build in extensibility by keeping
+indexing of text units, the basic data structure, independent of the way
+that that it is organized: the handling of indexing makes no assumptions
+about how it is to be expressed structurally.  This has made the program
+more complex than it would have been had I tried to make a simple copy
+of @NUDIST{} but I believe it will have been worth the extra time when
+I finally get around to bringing in new structures such as the Atlas/ti.
+The program is centred around the tree structure.  It would be quite
+possible to change this, but from my experiences with @NUDIST{} I am quite
+happy with this method of organizing the data, so I envisage any
+additions that may be made as enhancements of the tree model rather than
+a radical paradigm shift.
+
+
+At the moment, I am using and testing the program in my PhD research
+into the UK National Lottery, from which the examples in this manual
+come.
+
+@bye
+
+@c  Local Variables:
+@c  compile-command: "texi2dvi qda.texi"
+@c  eval: (add-hook 'write-file-hooks 'time-stamp)
+@c  time-stamp-start: "@set UPDATED "
+@c  time-stamp-format: "%02d/%02m/%:y"
+@c  time-stamp-end: "$"
+@c  End:
